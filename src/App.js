@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import React, { useEffect, useRef, useState } from 'react'
-import {Canvas, useFrame} from '@react-three/fiber'
+import {Canvas, useFrame, useThree} from '@react-three/fiber'
 import * as THREE from 'three';
 
 const vertexShader = `
@@ -22,7 +22,7 @@ void main() {
     vec2 st = (gl_FragCoord.xy * 2.0)/u_resolution.xy-1.0;
     st.x *= u_resolution.xy.x / u_resolution.xy.y;
 
-    float d = step(circle(st, .1), 0.0) * (sin(u_time * 3.0) * .5 + .5);
+    float d = step(circle(st, .2), 0.0) * (sin(u_time * 3.0) * .5 + .5);
     gl_FragColor=vec4(d,d,d,1.0);
 }
 `
@@ -30,6 +30,9 @@ void main() {
 function Box(props) {
   // This reference will give us direct access to the mesh
   const mesh = useRef(null)
+
+  const shader = useState(fragmentShader)
+
   const [height, setHeight] = useState(0)
   const clock = useRef(new THREE.Clock())
 
@@ -40,47 +43,87 @@ function Box(props) {
     u_mouse: { type: "v2", value: new THREE.Vector2() }
   })
 
-  // Set up state for the hovered and active state
-  const [hovered, setHover] = useState(false)
-  const [active, setActive] = useState(false)
-  // Subscribe this component to the render-loop, rotate the mesh every frame
+  useEffect(() => {
+    const resizeListener = () => {
+      uniforms.current.u_resolution.value.x = cr.clientWidth
+      uniforms.current.u_resolution.value.y = cr.clientHeight
+    }
+    window.addEventListener('resize', resizeListener)
+    return () => {
+      window.removeEventListener('resize', resizeListener)
+    }
+  }, [])
+
+  // Subscribe this component to the render-loop
   useFrame((state, delta) => (uniforms.current.u_time.value += clock.current.getDelta()))
-  // Return view, these are regular three.js elements expressed in JSX
-
-  console.log(mesh.current);
-  console.log(props.canvasRef);
-
+ 
   return (
     <mesh
       {...props}
       ref={mesh}
-      scale={active ? 1.5 : 1}
-      onClick={(event) => setActive(!active)}
-      onPointerOver={(event) => setHover(true)}
-      onPointerOut={(event) => setHover(false)}
+      // scale={active ? 1.5 : 1}
+      // onClick={(event) => setActive(!active)}
+      // onPointerOver={(event) => setHover(true)}
+      // onPointerOut={(event) => setHover(false)}
     >
       <planeBufferGeometry args={[2,3]} />
       <shaderMaterial
         vertexShader={vertexShader}
         fragmentShader={props.fragmentShader}
-        uniforms={uniforms.current} />
+        uniforms={uniforms.current}
+
+        onUpdate={(a)=>{
+          // Hack: the material doesn't seem to update when i change the shader.
+          a.needsUpdate=true
+        }}
+        />
     </mesh>
   )
 }
 
-const ShaderViewer = (props) => {
+const ShaderViewer = ({shader}) => {
   const canvasRef = useRef(null)
   return <div>
     <Canvas ref={canvasRef}>
-      <Box canvasRef={canvasRef} fragmentShader={fragmentShader} />
+      <Box canvasRef={canvasRef} fragmentShader={shader} />
     </Canvas>
   </div>
 }
 
+// TODO: dynamically get shaders??
+const shaderSrcs = [
+  "/shaders/test.frag",
+  "/shaders/omg.frag"
+]
+
 function App() {
+  const [shaderSrc, setShaderSrc] = useState("/shaders/test.frag")
+  const [shader, setShader] = useState(fragmentShader)
+
+  const selectShader = (e) => {
+    setShaderSrc(e.target.value)
+  }
+
+  useEffect(() => {
+    fetch(shaderSrc)
+      .then((r) => (r.text()))
+      .then((t) => {
+        setShader(t)
+      })
+  }, [shaderSrc])
+
   return (
     <div className="App">
-      <ShaderViewer />
+      <div>
+        <select onChange={selectShader}>
+          {
+            shaderSrcs.map((i) => (<option value={i}>{i}</option>))
+          }
+        </select>
+      </div>
+      <div>
+        <ShaderViewer shader={shader}/>
+      </div>
     </div>
   );
 }
