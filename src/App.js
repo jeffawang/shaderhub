@@ -21,8 +21,8 @@ float circle(vec2 xy, float r) {
 void main() {
     vec2 st = (gl_FragCoord.xy * 2.0)/u_resolution.xy-1.0;
     st.x *= u_resolution.xy.x / u_resolution.xy.y;
-    
-    float d = step(circle(st, .2), .2);
+
+    float d = step(circle(st, .1), 0.0) * (sin(u_time * 3.0) * .5 + .5);
     gl_FragColor=vec4(d,d,d,1.0);
 }
 `
@@ -62,20 +62,17 @@ function Box(props) {
       <planeBufferGeometry args={[2,3]} />
       <shaderMaterial
         vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
+        fragmentShader={props.fragmentShader}
         uniforms={uniforms.current} />
     </mesh>
   )
 }
 
-const ShaderViewer = () => {
+const ShaderViewer = (props) => {
   const canvasRef = useRef(null)
   return <div>
     <Canvas ref={canvasRef}>
-      <ambientLight />
-      <pointLight position={[10, 10, 10]} />
-      <Box position={[-1.2, 0, 0]} canvasRef={canvasRef}/>
-      <Box position={[1.2, 0, 0]} canvasRef={canvasRef}/>
+      <Box canvasRef={canvasRef} fragmentShader={fragmentShader} />
     </Canvas>
   </div>
 }
