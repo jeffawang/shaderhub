@@ -14,7 +14,7 @@ const shaderSrcs = [
     "height": "500px"
   },
   {
-    "name": "squiggly circle",
+    "name": "squiggly-circle",
     "src": "/shaders/squigglycircle.frag",
     "width": "500px",
     "height": "500px"

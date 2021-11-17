@@ -95,7 +95,7 @@ function Box(props) {
 
 const ShaderViewer = ({shaderSrc}) => {
   const canvasRef = useRef(null)
-  const [hidden, setHidden] = useState(true)
+  const [hidden, setHidden] = useState(!(window.location.hash.substr(1)===shaderSrc.name))
   return <div>
     <Button onClick={()=>{setHidden(!hidden)}}>{hidden?"►":"▼"} {shaderSrc.name}</Button>
     <Pane>
