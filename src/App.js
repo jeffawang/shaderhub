@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import {Canvas, useFrame, useThree} from '@react-three/fiber'
 import * as THREE from 'three';
 
+import { Pane, Text, Heading, Button } from 'evergreen-ui'
+
 const vertexShader = `
 void main() {
   gl_Position = vec4( position, 1.0 );
@@ -31,7 +33,7 @@ function Box(props) {
   // This reference will give us direct access to the mesh
   const mesh = useRef(null)
 
-  const shader = useState(fragmentShader)
+  const [shader, setShader] = useState(fragmentShader)
 
   const [height, setHeight] = useState(0)
   const clock = useRef(new THREE.Clock())
@@ -42,6 +44,14 @@ function Box(props) {
     u_resolution: { type: "v2", value: new THREE.Vector2(cr.clientWidth, cr.clientHeight) },
     u_mouse: { type: "v2", value: new THREE.Vector2() }
   })
+
+  useEffect(() => {
+    fetch(props.shaderSrc)
+      .then((r) => (r.text()))
+      .then((t) => {
+        setShader(t)
+      })
+  }, [])
 
   useEffect(() => {
     const resizeListener = () => {
@@ -69,7 +79,7 @@ function Box(props) {
       <planeBufferGeometry args={[2,3]} />
       <shaderMaterial
         vertexShader={vertexShader}
-        fragmentShader={props.fragmentShader}
+        fragmentShader={shader}
         uniforms={uniforms.current}
 
         onUpdate={(a)=>{
@@ -81,19 +91,38 @@ function Box(props) {
   )
 }
 
-const ShaderViewer = ({shader}) => {
+const ShaderViewer = ({shaderSrc}) => {
   const canvasRef = useRef(null)
+  const [hidden, setHidden] = useState(true)
   return <div>
-    <Canvas ref={canvasRef}>
-      <Box canvasRef={canvasRef} fragmentShader={shader} />
-    </Canvas>
+    <Button onClick={()=>{setHidden(!hidden)}}>{hidden?"►":"▼"} {shaderSrc.name}</Button>
+    <Pane>
+    { !hidden ?
+      <Canvas ref={canvasRef} style={{width:shaderSrc.width, height:shaderSrc.height}}>
+        <Box canvasRef={canvasRef} shaderSrc={shaderSrc.src} />
+      </Canvas>
+      : null
+    }
+    </Pane>
   </div>
 }
 
 // TODO: dynamically get shaders??
 const shaderSrcs = [
-  "/shaders/test.frag",
-  "/shaders/omg.frag"
+  {
+    "name": "test",
+    "src": "/shaders/test.frag"
+  },
+  {
+    "name": "omg",
+    "src": "/shaders/omg.frag"
+  },
+  {
+    "name": "circles",
+    "src": "/shaders/circles.frag",
+    "width": "500px",
+    "height": "500px"
+  }
 ]
 
 function App() {
@@ -104,26 +133,35 @@ function App() {
     setShaderSrc(e.target.value)
   }
 
-  useEffect(() => {
-    fetch(shaderSrc)
-      .then((r) => (r.text()))
-      .then((t) => {
-        setShader(t)
-      })
-  }, [shaderSrc])
-
   return (
     <div className="App">
-      <div>
-        <select onChange={selectShader}>
-          {
-            shaderSrcs.map((i) => (<option value={i}>{i}</option>))
-          }
-        </select>
-      </div>
-      <div>
-        <ShaderViewer shader={shader}/>
-      </div>
+      <Pane
+        // height={50}
+        width="100%"
+        display="flex"
+        alignItems="center"
+        justifyContent="left"
+        borderBottom="1px solid #edeff5"
+        padding="20px"
+        >
+        <Heading>
+          <a href="/">Shaders!</a>
+        </Heading>
+      </Pane>
+      <Pane
+        display="flex"
+        flexDirection="column"
+        alignItems="left"
+        justifyContent="left"
+        padding="20px"
+        >
+        <Heading>Shaders!</Heading>
+        <div>
+            {
+              shaderSrcs.map((i) => (<ShaderViewer shaderSrc={i}/>))
+            }
+        </div>
+      </Pane>
     </div>
   );
 }
