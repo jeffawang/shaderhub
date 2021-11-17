@@ -2,7 +2,6 @@
 pages:
 	git branch -D build
 	git checkout -b build
-	git reset --hard master
 
 	# Create the build, in the ./build directory.
 	npm run build
@@ -27,7 +26,7 @@ pages:
 	git commit -m'CNAME'
 
 	# Then push the gh-pages branch.
-	# -f is required because the history doesnt make sense.
+	# -f is required because the history is discontinuous.
 	git push -f origin gh-pages:gh-pages
 
 	# Go back to the original branch
