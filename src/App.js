@@ -6,6 +6,8 @@ import * as THREE from 'three';
 
 import { Pane, Text, Heading, Button } from 'evergreen-ui'
 
+import shaderSrcs from './shaders'
+
 const vertexShader = `
 void main() {
   gl_Position = vec4( position, 1.0 );
@@ -108,22 +110,7 @@ const ShaderViewer = ({shaderSrc}) => {
 }
 
 // TODO: dynamically get shaders??
-const shaderSrcs = [
-  {
-    "name": "test",
-    "src": "/shaders/test.frag"
-  },
-  {
-    "name": "omg",
-    "src": "/shaders/omg.frag"
-  },
-  {
-    "name": "circles",
-    "src": "/shaders/circles.frag",
-    "width": "500px",
-    "height": "500px"
-  }
-]
+
 
 function App() {
   const [shaderSrc, setShaderSrc] = useState("/shaders/test.frag")
