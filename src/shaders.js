@@ -18,6 +18,12 @@ const shaderSrcs = [
     "src": "/shaders/squigglycircle.frag",
     "width": "500px",
     "height": "500px"
+  },
+  {
+    "name": "book",
+    "src": "/shaders/book.frag",
+    "width": "500px",
+    "height": "500px"
   }
 ]
 
