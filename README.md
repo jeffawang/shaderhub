@@ -1,4 +1,4 @@
-# Shaderlab
+# Shaderhub
 
 Just a place to put some shaders and whatnot.
 
