@@ -34,7 +34,7 @@ function App() {
           </Heading>
         </Box>
 
-        <Accordion defaultIndex={[0]} allowMultiple>
+        <Accordion defaultIndex={[]} allowMultiple>
           {defaultedShaderSrcs.map((shaderSrc) => (
             <AccordionItem>
               <h2>
@@ -51,7 +51,6 @@ function App() {
             </AccordionItem>
           ))}
         </Accordion>
-
       </div>
     </ChakraProvider>
   );
