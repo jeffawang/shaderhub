@@ -10,20 +10,20 @@ const shaderSrcs = [
   {
     "name": "circles",
     "src": "/shaders/circles.frag",
-    "width": "500px",
-    "height": "500px"
+    "width": "512px",
+    "height": "512px"
   },
   {
     "name": "squiggly-circle",
     "src": "/shaders/squigglycircle.frag",
-    "width": "500px",
-    "height": "500px"
+    "width": "512px",
+    "height": "512px"
   },
   {
     "name": "book",
     "src": "/shaders/book.frag",
-    "width": "500px",
-    "height": "500px"
+    "width": "512px",
+    "height": "512px"
   }
 ]
 
