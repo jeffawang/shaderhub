@@ -98,7 +98,7 @@ const ShaderViewer = ({shaderSrc, children}) => {
   const [hidden, setHidden] = useState(!(window.location.hash.substr(1)===shaderSrc.name))
 
   return <div>
-    <Box borderWidth="2px" borderRadius="lg" overflow="hidden">
+    <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
       <Box cursor="pointer" bgColor="gray.900" padding={4} onClick={()=>{setHidden(!hidden)}}>{hidden?"►":"▼"} {shaderSrc.name} </Box>
       { !hidden ?
         <Box ref={paneRef} padding={4}>

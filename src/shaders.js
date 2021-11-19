@@ -5,22 +5,21 @@ const shaderSrcs = [
   },
   {
     "name": "circles",
-    "src": "/shaders/circles.frag",
-    "width": "512px",
-    "height": "512px"
+    "src": "/shaders/circles.frag"
   },
   {
     "name": "squiggly-circle",
-    "src": "/shaders/squigglycircle.frag",
-    "width": "512px",
-    "height": "512px"
+    "src": "/shaders/squigglycircle.frag"
   },
   {
     "name": "book",
-    "src": "/shaders/book.frag",
-    "width": "512px",
-    "height": "512px"
+    "src": "/shaders/book.frag"
   }
 ]
 
-export default shaderSrcs
+const shaderDefaults = {
+  "width": "512px",
+  "height": "512px"
+}
+
+export {shaderSrcs, shaderDefaults}

@@ -3,7 +3,7 @@ import './App.css';
 import React from 'react'
 import {ChakraProvider, extendTheme, Heading, Box} from '@chakra-ui/react'
 
-import shaderSrcs from './shaders'
+import {shaderSrcs, shaderDefaults} from './shaders'
 import ShaderViewer from './components/ShaderViewer'
 
 const config = {
@@ -12,8 +12,10 @@ const config = {
 }
 const theme = extendTheme({ config })
 
-
 function App() {
+
+  const defaultedShaderSrcs = shaderSrcs.map( (s) => ({...shaderDefaults, ...s}) )
+
   return (
     <ChakraProvider theme={theme}>
       <div className="App">
@@ -39,7 +41,7 @@ function App() {
           >
           <div>
               {
-                shaderSrcs.map((i) => (<ShaderViewer shaderSrc={i}/>))
+                defaultedShaderSrcs.map((i) => (<ShaderViewer shaderSrc={i}/>))
               }
           </div>
         </Box>
