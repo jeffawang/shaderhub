@@ -1,34 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 
-import { Text, Box, Slider, SliderTrack, SliderFilledTrack, SliderThumb } from "@chakra-ui/react"
-import { FormControl, FormLabel, RadioGroup, HStack, Radio, FormHelperText } from "@chakra-ui/react"
-import { NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper} from '@chakra-ui/react'
+import { Box } from "@chakra-ui/react"
+
+import ShaderRadio from './ShaderRadio'
+import ShaderSlider from './ShaderSlider'
 
 import * as THREE from 'three';
 
-const vertexShader = `
-void main() {
-  gl_Position = vec4( position, 1.0 );
-}
-`
-
-const fragmentShader = `
-uniform vec2 u_resolution;
-uniform float u_time;
-
-float circle(vec2 xy, float r) {
-  return length(xy) - r;
-}
-
-void main() {
-    vec2 st = (gl_FragCoord.xy * 2.0)/u_resolution.xy-1.0;
-    st.x *= u_resolution.xy.x / u_resolution.xy.y;
-
-    float d = step(circle(st, .2), 0.0) * (sin(u_time * 3.0) * .5 + .5);
-    gl_FragColor=vec4(d,d,d,1.0);
-}
-`
+import { vertexShader, fragmentShader } from './defaultShaders'
 
 function ShaderMesh(props) {
   // This reference will give us direct access to the mesh
@@ -89,83 +69,6 @@ function ShaderMesh(props) {
         />
     </mesh>
   )
-}
-
-const TODOSliderExample = {
-  "type": "slider",
-  "name": "Amount of fun",
-  "uniform": "u_fun",
-  "defaultValue": 0.5
-}
-
-const ShaderSlider = ({control, uniforms}) => {
-  const [value, setValue] = useState(control.defaultValue)
-
-  useEffect(() => {
-    uniforms.current[control.uniform] = { type: "f", value: value }
-  })
-
-  const onChange = (n) => {
-    setValue(n)
-    uniforms.current[control.uniform].value = value
-  }
-
-  return <>
-      <Text>{control.name}</Text>
-      <Box display="flex" style={{gap: 20}}>
-        <NumberInput value={value} onChange={onChange} size="xs" textAlign="right" max={1} min={0} maxW="3rem">
-          <NumberInputField paddingLeft="0.3em" paddingRight="0.3em" textAlign="right"/>
-        </NumberInput>
-        <Slider step={0.01} onChange={onChange} focusThumbOnChange={false}
-          min={0}
-          max={1}
-          aria-label={`slider-${control.uniform}`}
-          value={value}>
-          <SliderTrack>
-            <SliderFilledTrack />
-          </SliderTrack>
-          <SliderThumb />
-        </Slider>
-      </Box>
-  </>
-}
-
-const ShaderRadio = ({control, uniforms}) => {
-  
-  useEffect(() => {
-    control.options.map((option) =>  {
-      uniforms.current[option.uniform] = { value: option.uniform === control.defaultValue }
-    })
-  })
-
-  const onChange = (newSelected) => {
-    control.options.map((option) =>  {
-      uniforms.current[option.uniform].value = option.uniform === newSelected
-    })
-  }
-
-  return <FormControl as="fieldset">
-    <FormLabel as="legend">{control.name}</FormLabel>
-    <RadioGroup defaultValue={control.defaultValue} onChange={onChange}>
-      <HStack spacing="24px">
-        {control.options.map((option) => <Radio defaultChecked={option.uniform===control.defaultValue} value={option.uniform}>{option.name}</Radio>)}
-      </HStack>
-    </RadioGroup>
-    <FormHelperText>{control.description}</FormHelperText>
-  </FormControl>
-}
-
-const TODORadioExample = {
-  "type": "radio",
-  "name": "Favorite signal",
-  "defaultValue": "u_sine",
-  "options": [{
-    "name": "Sine",
-    "uniform": "u_sine"
-  }, {
-    "name": "Square",
-    "uniform": "u_square"
-  }]
 }
 
 const ShaderControls = ({shaderSrc, uniforms}) => {
