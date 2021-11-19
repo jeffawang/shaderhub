@@ -107,7 +107,7 @@ const ShaderSlider = ({control, uniforms}) => {
 
   const onChange = (n) => {
     setValue(n)
-    uniforms.current[control.uniform] = { type: "f", value: value }
+    uniforms.current[control.uniform].value = value
   }
 
   return <>
@@ -131,15 +131,24 @@ const ShaderSlider = ({control, uniforms}) => {
 }
 
 const ShaderRadio = ({control, uniforms}) => {
-  const {name, defaultValue, options} = control
+  
+  useEffect(() => {
+    control.options.map((option) =>  {
+      uniforms.current[option.uniform] = { value: option.uniform === control.defaultValue }
+    })
+  })
 
-  // TODO: hook up the uniforms to onChange for RadioGroup.
+  const onChange = (newSelected) => {
+    control.options.map((option) =>  {
+      uniforms.current[option.uniform].value = option.uniform === newSelected
+    })
+  }
 
   return <FormControl as="fieldset">
-    <FormLabel as="legend">{name}</FormLabel>
-    <RadioGroup defaultValue={defaultValue}>
+    <FormLabel as="legend">{control.name}</FormLabel>
+    <RadioGroup defaultValue={control.defaultValue} onChange={onChange}>
       <HStack spacing="24px">
-        {control.options.map((option) => <Radio value={option.uniform}>{option.name}</Radio>)}
+        {control.options.map((option) => <Radio defaultChecked={option.uniform===control.defaultValue} value={option.uniform}>{option.name}</Radio>)}
       </HStack>
     </RadioGroup>
     <FormHelperText>Select only if you're a fan.</FormHelperText>
@@ -158,7 +167,6 @@ const TODORadioExample = {
     "uniform": "u_square"
   }]
 }
-
 
 const ShaderControls = ({shaderSrc, uniforms}) => {
   return <Box display="flex" flexDirection="column" flexGrow="1" style={{gap: 10}}>
@@ -189,7 +197,8 @@ const ShaderViewer = ({shaderSrc, children}) => {
   const uniforms = useRef({
     u_time: { type: "f", value: 1.0 },
     u_resolution: { type: "v2", value: new THREE.Vector2(0, 0) },
-    u_mouse: { type: "v2", value: new THREE.Vector2() }
+    u_mouse: { type: "v2", value: new THREE.Vector2() },
+    u_sine: { type: "b", value: false }
   })
 
   return <div>

@@ -37,7 +37,36 @@ const shaderSrcs = [
   },
   {
     "name": "squiggly-circle",
-    "src": "/shaders/squigglycircle.frag"
+    "src": "/shaders/squigglycircle.frag",
+    "parameters": [
+      {
+        "type": "slider",
+        "name": "radius",
+        "uniform": "u_radius",
+        "defaultValue": 0.5
+      },
+      {
+        "type": "slider",
+        "name": "squiggliness",
+        "uniform": "u_squiggliness",
+        "defaultValue": 0.5
+      },
+      {
+        "type": "radio",
+        "name": "Favorite signal",
+        "defaultValue": "u_square",
+        "options": [{
+          "name": "Sine",
+          "uniform": "u_sine"
+        }, {
+          "name": "Saw",
+          "uniform": "u_saw"
+        }, {
+          "name": "Square",
+          "uniform": "u_square"
+        }]
+      }
+    ]
   },
   {
     "name": "book",
