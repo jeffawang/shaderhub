@@ -16,6 +16,17 @@ const theme = extendTheme({ config })
 function App() {
 
   const defaultedShaderSrcs = shaderSrcs.map( (s) => ({...shaderDefaults, ...s}) )
+  
+  // satisfy the accordion
+  const defaultIndex = []
+  for (let i=0; i<defaultedShaderSrcs.length; i++) {
+    const shaderSrc = defaultedShaderSrcs[i]
+    if (window.location.hash.substr(1) === shaderSrc.name) {
+      defaultIndex.push(i)
+    }
+  }
+
+  console.log(defaultIndex)
 
   return (
     <ChakraProvider theme={theme}>
@@ -34,7 +45,7 @@ function App() {
           </Heading>
         </Box>
 
-        <Accordion defaultIndex={[]} allowMultiple>
+        <Accordion defaultIndex={defaultIndex} allowMultiple>
           {defaultedShaderSrcs.map((shaderSrc) => (
             <AccordionItem>
               <h2>
