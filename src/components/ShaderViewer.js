@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 
-import { Box, Slider, SliderTrack, SliderFilledTrack, SliderThumb } from "@chakra-ui/react"
+import { Text, Box, Slider, SliderTrack, SliderFilledTrack, SliderThumb } from "@chakra-ui/react"
 import { FormControl, FormLabel, RadioGroup, HStack, Radio, FormHelperText } from "@chakra-ui/react"
 import { NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper} from '@chakra-ui/react'
 
@@ -111,7 +111,7 @@ const ShaderSlider = ({control, uniforms}) => {
   }
 
   return <>
-      <p style={{userSelect: "none"}}>{control.name}</p>
+      <Text>{control.name}</Text>
       <Box display="flex" style={{gap: 20}}>
         <NumberInput value={value} onChange={onChange} size="xs" textAlign="right" max={1} min={0} maxW="3rem">
           <NumberInputField paddingLeft="0.3em" paddingRight="0.3em" textAlign="right"/>
@@ -151,7 +151,7 @@ const ShaderRadio = ({control, uniforms}) => {
         {control.options.map((option) => <Radio defaultChecked={option.uniform===control.defaultValue} value={option.uniform}>{option.name}</Radio>)}
       </HStack>
     </RadioGroup>
-    <FormHelperText>Select only if you're a fan.</FormHelperText>
+    <FormHelperText>{control.description}</FormHelperText>
   </FormControl>
 }
 

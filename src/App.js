@@ -7,11 +7,18 @@ import {Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon
 import {shaderSrcs, shaderDefaults} from './shaders'
 import ShaderViewer from './components/ShaderViewer'
 
+import "@fontsource/roboto-mono"
 const config = {
-  initialColorMode: "dark",
-  useSystemColorMode: false,
+  fonts: {
+    heading: '"Roboto Mono", monospace',
+    body: '"Roboto Mono", monospace',
+  },
+  config: {
+    initialColorMode: "dark",
+    useSystemColorMode: false,
+  }
 }
-const theme = extendTheme({ config })
+const theme = extendTheme(config)
 
 function App() {
 
@@ -41,7 +48,7 @@ function App() {
           padding="20px"
           >
           <Heading>
-            <a href="/">Shaders!</a>
+            <a href="/">shaderhub</a>
           </Heading>
         </Box>
 
