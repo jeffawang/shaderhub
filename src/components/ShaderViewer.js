@@ -37,11 +37,7 @@ function ShaderMesh(props) {
 
   const canvasRef = props.canvasRef.current
 
-  const uniforms = useRef({
-    u_time: { type: "f", value: 1.0 },
-    u_resolution: { type: "v2", value: new THREE.Vector2(0, 0) },
-    u_mouse: { type: "v2", value: new THREE.Vector2() }
-  })
+  const uniforms = props.uniforms
 
   useEffect(() => {
     uniforms.current.u_resolution.value.set(canvasRef.clientWidth, canvasRef.clientHeight)
@@ -102,16 +98,25 @@ const TODOSliderExample = {
   "defaultValue": 0.5
 }
 
-const ShaderSlider = ({control}) => {
+const ShaderSlider = ({control, uniforms}) => {
   const [value, setValue] = useState(control.defaultValue)
+
+  useEffect(() => {
+    uniforms.current[control.uniform] = { type: "f", value: value }
+  })
+
+  const onChange = (n) => {
+    setValue(n)
+    uniforms.current[control.uniform] = { type: "f", value: value }
+  }
 
   return <>
       <p style={{userSelect: "none"}}>{control.name}</p>
       <Box display="flex" style={{gap: 20}}>
-        <NumberInput value={value} onChange={setValue} size="xs" textAlign="right" max={1} min={0} maxW="3rem">
+        <NumberInput value={value} onChange={onChange} size="xs" textAlign="right" max={1} min={0} maxW="3rem">
           <NumberInputField paddingLeft="0.3em" paddingRight="0.3em" textAlign="right"/>
         </NumberInput>
-        <Slider step={0.01} onChange={setValue} focusThumbOnChange={false}
+        <Slider step={0.01} onChange={onChange} focusThumbOnChange={false}
           min={0}
           max={1}
           aria-label={`slider-${control.uniform}`}
@@ -125,9 +130,11 @@ const ShaderSlider = ({control}) => {
   </>
 }
 
-const ShaderRadio = ({control}) => {
+const ShaderRadio = ({control, uniforms}) => {
   const {name, defaultValue, options} = control
-  console.log("radio was called...", control)
+
+  // TODO: hook up the uniforms to onChange for RadioGroup.
+
   return <FormControl as="fieldset">
     <FormLabel as="legend">{name}</FormLabel>
     <RadioGroup defaultValue={defaultValue}>
@@ -153,22 +160,22 @@ const TODORadioExample = {
 }
 
 
-const ShaderControls = ({shaderSrc}) => {
+const ShaderControls = ({shaderSrc, uniforms}) => {
   return <Box display="flex" flexDirection="column" flexGrow="1" style={{gap: 10}}>
     {
       shaderSrc.parameters.map((control) => {
-        return <ShaderControl control={control}/>
+        return <ShaderControl control={control} uniforms={uniforms}/>
       })
     }
   </Box>
 }
 
-const ShaderControl = ({control}) => {
+const ShaderControl = ({control, uniforms}) => {
   switch (control.type) {
     case "radio":
-      return <ShaderRadio control={control}/>
+      return <ShaderRadio control={control} uniforms={uniforms}/>
     case "slider":
-      return <ShaderSlider control={control}/>
+      return <ShaderSlider control={control} uniforms={uniforms}/>
   }
   return null
 }
@@ -179,14 +186,20 @@ const ShaderViewer = ({shaderSrc, children}) => {
   const mouseXY = useRef({x: 0, y: 0})
   const [hidden, setHidden] = useState(!(window.location.hash.substr(1)===shaderSrc.name))
 
+  const uniforms = useRef({
+    u_time: { type: "f", value: 1.0 },
+    u_resolution: { type: "v2", value: new THREE.Vector2(0, 0) },
+    u_mouse: { type: "v2", value: new THREE.Vector2() }
+  })
+
   return <div>
     <Box ref={paneRef} padding={4} display="flex" style={{gap: "20px"}}>
       <Box >
         <Canvas ref={canvasRef} style={{width:shaderSrc.width, height:shaderSrc.height}}>
-          <ShaderMesh canvasRef={canvasRef} shaderSrc={shaderSrc.src}/>
+          <ShaderMesh canvasRef={canvasRef} shaderSrc={shaderSrc.src} uniforms={uniforms}/>
         </Canvas>
       </Box>
-      <ShaderControls shaderSrc={shaderSrc} />
+      <ShaderControls shaderSrc={shaderSrc} uniforms={uniforms}/>
     </Box>
   </div>
 }

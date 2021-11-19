@@ -8,6 +8,7 @@ precision mediump float;
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
+uniform float u_radius;
 
 #define PI 3.14159
 #define TAU 6.28319
@@ -20,6 +21,7 @@ void main() {
     
 
     float r = .4 ;
+    r = u_radius;
     float thickness = .01;
     float d = abs(length(st) - r);
     // d = step(thickness, d);

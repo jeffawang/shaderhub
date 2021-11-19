@@ -25,7 +25,15 @@ const shaderSrcs = [
   },
   {
     "name": "circles",
-    "src": "/shaders/circles.frag"
+    "src": "/shaders/circles.frag",
+    "parameters": [
+      {
+        "type": "slider",
+        "name": "radius",
+        "uniform": "u_radius",
+        "defaultValue": 0.5
+      }
+    ]
   },
   {
     "name": "squiggly-circle",
