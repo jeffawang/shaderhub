@@ -1,11 +1,7 @@
 const shaderSrcs = [
   {
-    "name": "test",
-    "src": "/shaders/test.frag"
-  },
-  {
-    "name": "omg",
-    "src": "/shaders/omg.frag"
+    "name": "mouse",
+    "src": "/shaders/mouse.frag"
   },
   {
     "name": "circles",

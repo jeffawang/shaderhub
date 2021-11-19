@@ -26,23 +26,21 @@ void main() {
 }
 `
 
-function Box(props) {
+function ShaderMesh(props) {
   // This reference will give us direct access to the mesh
   const mesh = useRef(null)
-
   const [shader, setShader] = useState(fragmentShader)
 
-  const [height, setHeight] = useState(0)
-  const clock = useRef(new THREE.Clock())
+  const canvasRef = props.canvasRef.current
 
-  const cr = props.canvasRef.current
   const uniforms = useRef({
     u_time: { type: "f", value: 1.0 },
-    u_resolution: { type: "v2", value: new THREE.Vector2(cr.clientWidth, cr.clientHeight) },
+    u_resolution: { type: "v2", value: new THREE.Vector2(0, 0) },
     u_mouse: { type: "v2", value: new THREE.Vector2() }
   })
 
   useEffect(() => {
+    uniforms.current.u_resolution.value.set(canvasRef.clientWidth, canvasRef.clientHeight)
     fetch(props.shaderSrc)
       .then((r) => (r.text()))
       .then((t) => {
@@ -50,37 +48,42 @@ function Box(props) {
       })
   }, [])
 
+  const gl = useThree((state) => state.gl)
+
   useEffect(() => {
     const resizeListener = () => {
-      uniforms.current.u_resolution.value.x = cr.clientWidth
-      uniforms.current.u_resolution.value.y = cr.clientHeight
+      uniforms.current.u_resolution.value.set(canvasRef.clientWidth, canvasRef.clientHeight)
     }
     window.addEventListener('resize', resizeListener)
+
+    gl.domElement.addEventListener("mousemove", (e) => {
+      const x = e.offsetX
+      const y = canvasRef.clientHeight - e.offsetY
+      uniforms.current.u_mouse.value.set(x, y)
+    })
+
     return () => {
       window.removeEventListener('resize', resizeListener)
     }
+
   }, [])
 
   // Subscribe this component to the render-loop
-  useFrame((state, delta) => (uniforms.current.u_time.value += clock.current.getDelta()))
- 
+  useFrame(({gl, scene, camera}, delta) => {
+    uniforms.current.u_time.value += delta
+    gl.render(scene, camera)
+  }, 1)
+   
   return (
-    <mesh
-      {...props}
-      ref={mesh}
-      // scale={active ? 1.5 : 1}
-      // onClick={(event) => setActive(!active)}
-      // onPointerOver={(event) => setHover(true)}
-      // onPointerOut={(event) => setHover(false)}
-    >
+    <mesh {...props} ref={mesh}>
       <planeBufferGeometry args={[2,3]} />
       <shaderMaterial
         vertexShader={vertexShader}
         fragmentShader={shader}
         uniforms={uniforms.current}
-
         onUpdate={(a)=>{
           // Hack: the material doesn't seem to update when i change the shader.
+          // Should only get called twice.
           a.needsUpdate=true
         }}
         />
@@ -88,15 +91,18 @@ function Box(props) {
   )
 }
 
-const ShaderViewer = ({shaderSrc}) => {
+const ShaderViewer = ({shaderSrc, children}) => {
   const canvasRef = useRef(null)
+  const paneRef = useRef(null)
+  const mouseXY = useRef({x: 0, y: 0})
   const [hidden, setHidden] = useState(!(window.location.hash.substr(1)===shaderSrc.name))
+
   return <div>
     <Button onClick={()=>{setHidden(!hidden)}}>{hidden?"►":"▼"} {shaderSrc.name}</Button>
-    <Pane>
+    <Pane ref={paneRef}>
     { !hidden ?
       <Canvas ref={canvasRef} style={{width:shaderSrc.width, height:shaderSrc.height}}>
-        <Box canvasRef={canvasRef} shaderSrc={shaderSrc.src} />
+        <ShaderMesh canvasRef={canvasRef} shaderSrc={shaderSrc.src}/>
       </Canvas>
       : null
     }
