@@ -4,6 +4,12 @@ const shaderSrcs = [
     "src": "/shaders/mouse.frag",
     "parameters": [
       {
+        "type": "slider",
+        "name": "Amount of fun",
+        "uniform": "u_fun",
+        "defaultValue": 0.5
+      },
+      {
         "type": "radio",
         "name": "Favorite signal",
         "defaultValue": "u_sine",

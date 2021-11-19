@@ -95,11 +95,18 @@ function ShaderMesh(props) {
   )
 }
 
-const ShaderSlider = ({label, defaultValue}) => {
-  const [value, setValue] = useState(defaultValue)
+const TODOSliderExample = {
+  "type": "slider",
+  "name": "Amount of fun",
+  "uniform": "u_fun",
+  "defaultValue": 0.5
+}
+
+const ShaderSlider = ({control}) => {
+  const [value, setValue] = useState(control.defaultValue)
 
   return <>
-      <p style={{userSelect: "none"}}>{label}</p>
+      <p style={{userSelect: "none"}}>{control.name}</p>
       <Box display="flex" style={{gap: 20}}>
         <NumberInput value={value} onChange={setValue} size="xs" textAlign="right" max={1} min={0} maxW="3rem">
           <NumberInputField paddingLeft="0.3em" paddingRight="0.3em" textAlign="right"/>
@@ -107,7 +114,7 @@ const ShaderSlider = ({label, defaultValue}) => {
         <Slider step={0.01} onChange={setValue} focusThumbOnChange={false}
           min={0}
           max={1}
-          aria-label={`slider-${label.replace(/ /g, '-')}`}
+          aria-label={`slider-${control.uniform}`}
           value={value}>
           <SliderTrack>
             <SliderFilledTrack />
@@ -138,14 +145,16 @@ const TODORadioExample = {
   "defaultValue": "u_sine",
   "options": [{
     "name": "Sine",
+    "uniform": "u_sine"
+  }, {
+    "name": "Square",
     "uniform": "u_square"
   }]
 }
 
+
 const ShaderControls = ({shaderSrc}) => {
   return <Box display="flex" flexDirection="column" flexGrow="1" style={{gap: 10}}>
-    <ShaderSlider label="test 1" defaultValue={.1}/>
-    <ShaderSlider label="test 2" defaultValue={.5}/>
     {
       shaderSrc.parameters.map((control) => {
         return <ShaderControl control={control}/>
@@ -158,6 +167,8 @@ const ShaderControl = ({control}) => {
   switch (control.type) {
     case "radio":
       return <ShaderRadio control={control}/>
+    case "slider":
+      return <ShaderSlider control={control}/>
   }
   return null
 }
