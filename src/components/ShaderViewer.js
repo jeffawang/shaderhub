@@ -1,4 +1,4 @@
-import { Pane, Text, Heading, Button } from 'evergreen-ui'
+import { Box } from "@chakra-ui/react"
 import { useEffect, useRef, useState } from 'react'
 import {Canvas, useFrame, useThree} from '@react-three/fiber'
 import * as THREE from 'three';
@@ -98,15 +98,19 @@ const ShaderViewer = ({shaderSrc, children}) => {
   const [hidden, setHidden] = useState(!(window.location.hash.substr(1)===shaderSrc.name))
 
   return <div>
-    <Button onClick={()=>{setHidden(!hidden)}}>{hidden?"►":"▼"} {shaderSrc.name}</Button>
-    <Pane ref={paneRef}>
-    { !hidden ?
-      <Canvas ref={canvasRef} style={{width:shaderSrc.width, height:shaderSrc.height}}>
-        <ShaderMesh canvasRef={canvasRef} shaderSrc={shaderSrc.src}/>
-      </Canvas>
-      : null
-    }
-    </Pane>
+    <Box borderWidth="2px" borderRadius="lg" overflow="hidden">
+      <Box cursor="pointer" bgColor="gray.900" padding={4} onClick={()=>{setHidden(!hidden)}}>{hidden?"►":"▼"} {shaderSrc.name} </Box>
+      { !hidden ?
+        <Box ref={paneRef} padding={4}>
+          <Box >
+            <Canvas ref={canvasRef} style={{width:shaderSrc.width, height:shaderSrc.height}}>
+              <ShaderMesh canvasRef={canvasRef} shaderSrc={shaderSrc.src}/>
+            </Canvas>
+          </Box>
+        </Box>
+        : null
+      }
+    </Box>
   </div>
 }
 
