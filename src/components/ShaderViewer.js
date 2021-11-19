@@ -1,6 +1,8 @@
-import { Box } from "@chakra-ui/react"
 import { useEffect, useRef, useState } from 'react'
-import {Canvas, useFrame, useThree} from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+
+import { Box, Slider, SliderTrack, SliderFilledTrack, SliderThumb } from "@chakra-ui/react"
+
 import * as THREE from 'three';
 
 const vertexShader = `
@@ -98,18 +100,21 @@ const ShaderViewer = ({shaderSrc, children}) => {
   const [hidden, setHidden] = useState(!(window.location.hash.substr(1)===shaderSrc.name))
 
   return <div>
-    <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
-      <Box cursor="pointer" bgColor="gray.900" padding={4} onClick={()=>{setHidden(!hidden)}}>{hidden?"►":"▼"} {shaderSrc.name} </Box>
-      { !hidden ?
-        <Box ref={paneRef} padding={4}>
-          <Box >
-            <Canvas ref={canvasRef} style={{width:shaderSrc.width, height:shaderSrc.height}}>
-              <ShaderMesh canvasRef={canvasRef} shaderSrc={shaderSrc.src}/>
-            </Canvas>
-          </Box>
-        </Box>
-        : null
-      }
+    <Box ref={paneRef} padding={4} display="flex" style={{gap: "20px"}}>
+      <Box >
+        <Canvas ref={canvasRef} style={{width:shaderSrc.width, height:shaderSrc.height}}>
+          <ShaderMesh canvasRef={canvasRef} shaderSrc={shaderSrc.src}/>
+        </Canvas>
+      </Box>
+      <Box display="flex" flexDirection="column" flexGrow="1">
+        test slider
+        <Slider aria-label="omg-wtf-bbq" defaultValue={30}>
+          <SliderTrack>
+            <SliderFilledTrack />
+          </SliderTrack>
+          <SliderThumb />
+        </Slider>
+      </Box>
     </Box>
   </div>
 }

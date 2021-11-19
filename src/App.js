@@ -2,6 +2,7 @@ import './App.css';
 
 import React from 'react'
 import {ChakraProvider, extendTheme, Heading, Box} from '@chakra-ui/react'
+import {Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon} from '@chakra-ui/react'
 
 import {shaderSrcs, shaderDefaults} from './shaders'
 import ShaderViewer from './components/ShaderViewer'
@@ -32,19 +33,25 @@ function App() {
             <a href="/">Shaders!</a>
           </Heading>
         </Box>
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="left"
-          justifyContent="left"
-          padding="20px"
-          >
-          <div>
-              {
-                defaultedShaderSrcs.map((i) => (<ShaderViewer shaderSrc={i}/>))
-              }
-          </div>
-        </Box>
+
+        <Accordion defaultIndex={[0]} allowMultiple>
+          {defaultedShaderSrcs.map((shaderSrc) => (
+            <AccordionItem>
+              <h2>
+                <AccordionButton _expanded={{bgColor: "gray.700"}}>
+                  <Box flex="1" textAlign="left">
+                    {shaderSrc.name}
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel pb={4}>
+                  <ShaderViewer shaderSrc={shaderSrc}/>
+                </AccordionPanel>
+              </h2>
+            </AccordionItem>
+          ))}
+        </Accordion>
+
       </div>
     </ChakraProvider>
   );
