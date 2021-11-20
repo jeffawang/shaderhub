@@ -17,7 +17,12 @@ It should be an object something like this:
   }
 ```
 
+Potentially useful commands:
+
 ```
+# Run a local next.js dev server
+yarn dev
+
 # Build the site and put it into the gh-pages branch.
 # Warning: does some weird git stuff.
 make
