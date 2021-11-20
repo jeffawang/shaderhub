@@ -23,9 +23,19 @@ type ShaderListProps = {
 }
 
 export default function Home({shaderSrcs}: ShaderListProps) {
+  const defaultIndex: number[] = []
+  if (typeof window !== "undefined") {
+    for (let i=0; i<shaderSrcs.length; i++) {
+      const shaderSrc = shaderSrcs[i]
+      if (window.location.hash.substr(1) === shaderSrc.name) {
+        defaultIndex.push(i)
+      }
+    }
+  }
+
   return (
     <Layout>
-      <Accordion defaultIndex={[0]} allowMultiple>
+      <Accordion defaultIndex={defaultIndex} allowMultiple>
       {shaderSrcs.map((shaderSrc) => (
         <AccordionItem key={shaderSrc.name}>
           <h2>
