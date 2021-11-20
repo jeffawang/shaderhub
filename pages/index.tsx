@@ -9,9 +9,8 @@ import ShaderViewer from '../components/ShaderViewer'
 import Layout from '../components/layout'
 
 export async function getStaticProps(): Promise<GetStaticPropsResult<ShaderListProps>> {
-
+  // Runs server-side via next.js shenanigans.
   const shaderSrcs = getShaderSrcs()
-
   return {
     props: {
       shaderSrcs
@@ -28,7 +27,7 @@ export default function Home({shaderSrcs}: ShaderListProps) {
     <Layout>
       <Accordion defaultIndex={[0]} allowMultiple>
       {shaderSrcs.map((shaderSrc) => (
-        <AccordionItem>
+        <AccordionItem key={shaderSrc.name}>
           <h2>
             <AccordionButton _expanded={{bgColor: "gray.700"}}>
               <Box flex="1" textAlign="left">

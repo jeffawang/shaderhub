@@ -106,7 +106,7 @@ const ShaderControl = ({control, uniforms}: {
 
 const ShaderViewer = ({shaderSrc}: {
     shaderSrc: ShaderSrc
-    children: ReactNode
+    children?: ReactNode
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>() as MutableRefObject<HTMLCanvasElement>
   const paneRef = useRef(null)
