@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { Box, Heading } from '@chakra-ui/react'
 import React from 'react'
 
@@ -15,7 +17,7 @@ export default function Layout({children}: {
           padding="20px"
           >
           <Heading>
-            <a href="/">shaderhub</a>
+            <Link href="/">shaderhub</Link>
           </Heading>
         </Box>
         {children}

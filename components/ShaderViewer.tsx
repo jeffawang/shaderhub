@@ -85,7 +85,7 @@ const ShaderControls = ({shaderSrc, uniforms}: {
   return <Box display="flex" flexDirection="column" flexGrow="1" style={{gap: 10}}>
     {
       shaderSrc.parameters.map((control) => {
-        return <ShaderControl control={control} uniforms={uniforms}/>
+        return <ShaderControl control={control} uniforms={uniforms} key={control.uniform}/>
       })
     }
   </Box>

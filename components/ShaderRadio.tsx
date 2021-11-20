@@ -37,7 +37,15 @@ const ShaderRadio = ({control, uniforms}: {
     <FormLabel as="legend">{control.name}</FormLabel>
     <RadioGroup defaultValue={control.defaultValue} onChange={onChange}>
       <HStack spacing="24px">
-        {control.options.map((option) => <Radio defaultChecked={option.uniform===control.defaultValue} value={option.uniform}>{option.name}</Radio>)}
+        {control.options.map((option) =>
+          <Radio
+            defaultChecked={option.uniform===control.defaultValue}
+            value={option.uniform}
+            key={option.uniform}
+            >
+            {option.name}
+          </Radio>
+        )}
       </HStack>
     </RadioGroup>
     <FormHelperText>{control.description}</FormHelperText>
