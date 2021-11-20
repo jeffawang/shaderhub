@@ -1,6 +1,6 @@
 .PHONY: pages
 pages:
-	git branch -D build
+	git branch -D build || true
 	git checkout -b build
 
 	# Create the build, in the ./build directory.
