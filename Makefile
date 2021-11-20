@@ -22,8 +22,10 @@ pages:
 
 	# Set the CNAME, since this is how ghpages configures it...
 	/bin/echo -n 'shaderhub.jeffawang.com' > CNAME
-	git add CNAME
-	git commit -m'CNAME'
+	# Touch .nojekyll for gh-pages (otherwise _next/... paths return 404)
+	touch .nojekyll
+	git add CNAME .nojekyll
+	git commit -m'CNAME, .nojekyll'
 
 	# Then push the gh-pages branch.
 	# -f is required because the history is discontinuous.
