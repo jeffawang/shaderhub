@@ -55,13 +55,6 @@
     {
       "name": "raymarch-viz",
       "src": "/shaders/raymarch.frag",
-      "parameters": [
-        {
-          "type": "slider",
-          "name": "radius",
-          "uniform": "u_radius",
-          "defaultValue": 0.5
-        }
-      ]
+      "parameters": []
     }
   ]
