@@ -60,5 +60,9 @@
       "name": "raymarch-viz",
       "src": "/shaders/raymarch.frag",
       "parameters": []
+    },
+    {
+      "name": "scribble",
+      "src": "/shaders/scribble.frag"
     }
   ]
