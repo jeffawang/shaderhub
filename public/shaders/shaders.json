@@ -4,6 +4,10 @@
       "src": "/shaders/mouse.frag"
     },
     {
+      "name": "fermat",
+      "src": "/shaders/fermat.frag"
+    },
+    {
       "name": "circles",
       "src": "/shaders/circles.frag",
       "parameters": [
