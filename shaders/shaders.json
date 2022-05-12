@@ -1,0 +1,68 @@
+[
+    {
+      "name": "fermat",
+      "src": "/shaders/fermat.frag"
+    },
+    {
+      "name": "circles",
+      "src": "/shaders/circles.frag",
+      "parameters": [
+        {
+          "type": "slider",
+          "name": "radius",
+          "uniform": "u_radius",
+          "defaultValue": 0.5
+        }
+      ]
+    },
+    {
+      "name": "squiggly-circle",
+      "src": "/shaders/squigglycircle.frag",
+      "parameters": [
+        {
+          "type": "slider",
+          "name": "radius",
+          "uniform": "u_radius",
+          "defaultValue": 0.5
+        },
+        {
+          "type": "slider",
+          "name": "squiggliness",
+          "uniform": "u_squiggliness",
+          "defaultValue": 0.5
+        },
+        {
+          "type": "radio",
+          "name": "Favorite signal",
+          "defaultValue": "u_sine",
+          "options": [{
+            "name": "Sine",
+            "uniform": "u_sine"
+          }, {
+            "name": "Saw",
+            "uniform": "u_saw"
+          }, {
+            "name": "Square",
+            "uniform": "u_square"
+          }]
+        }
+      ]
+    },
+    {
+      "name": "squiggly-sphere",
+      "src": "/shaders/squigglysphere.frag"
+    },
+    {
+      "name": "book",
+      "src": "/shaders/book.frag"
+    },
+    {
+      "name": "raymarch-viz",
+      "src": "/shaders/raymarch.frag",
+      "parameters": []
+    },
+    {
+      "name": "scribble",
+      "src": "/shaders/scribble.frag"
+    }
+  ]
