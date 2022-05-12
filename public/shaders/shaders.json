@@ -1,9 +1,5 @@
 [
     {
-      "name": "mouse",
-      "src": "/shaders/mouse.frag"
-    },
-    {
       "name": "fermat",
       "src": "/shaders/fermat.frag"
     },
